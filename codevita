@@ -1,0 +1,188 @@
+import java.util.*;
+import java.io.*;
+
+public class _Flow_ {
+    
+    
+    static int[][] _g; // Traffic flow grid
+    static int[][] dp; // Memoization array for dynamic programming
+    static int _n_, _m_, _a_, _b_; // Variables for dimensions and coordinates
+    static int in = (int) 1e9; // Infinity value
+
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String[] nm = br.readLine().split(" ");
+
+        _n_ = Integer.parseInt(nm[0]);
+        _m_ = Integer.parseInt(nm[1]);
+
+        _g = new int[_n_ + 1][_m_ + 1]; // Traffic flow grid
+        dp = new int[_n_ + 1][_m_ + 1]; // Memoization array
+
+        // Initialize memoization array with -1
+        for (int[] r : dp) {
+            Arrays.fill(r, -1);
+        }
+
+        // Input traffic flow grid values
+        for (int r = 1; r <= _n_; r++) {
+            String[] traffic = br.readLine().split(" ");
+
+            for (int col = 1; col <= _m_; col++) {
+                _g[r][col] = Integer.parseInt(traffic[col - 1]);
+            }
+        }
+
+        String[] ij = br.readLine().split(" ");
+
+        int i = Integer.parseInt(ij[0]);
+        int j = Integer.parseInt(ij[1]);
+
+        String[] ab = br.readLine().split(" ");
+
+        _a_ = Integer.parseInt(ab[0]);
+        _b_ = Integer.parseInt(ab[1]);
+
+        // Call the solving function
+        int minTraffic = __Solve__(i, j);
+
+        // Check if there is a valid path
+        if (minTraffic == in) {
+            System.out.print(-1); // No valid path
+        } else {
+            System.out.print(minTraffic); // Minimum traffic flow
+        }
+
+    }
+
+         // Recursive function to find the minimum traffic flow
+        static int __Solve__(int __x_, int _y_) {
+        // Base case: If the current coordinates are out of bounds, return infinity
+        if (__x_ > _a_ || _y_ > _b_) {
+            return in;
+        }
+        // Base case: If Srihan reaches his workplace, return the traffic flow at that junction
+        if (__x_ == _a_ && _y_ == _b_) {
+            return _g[__x_][_y_];
+        }
+        // Memoization: If the value is already computed, return it
+        if (dp[__x_][_y_] != -1) {
+            return dp[__x_][_y_];
+        }
+
+        // Recursive calls to move right or down
+        int Right = __Solve__(__x_ + 1, _y_);
+        int Down = __Solve__(__x_, _y_ + 1);
+
+        // Choose the minimum between moving right and moving down
+        if (Right < Down) {
+            dp[__x_][_y_] = _g[__x_][_y_] + Right;
+        } else {
+            dp[__x_][_y_] = _g[__x_][_y_] + Down;
+        }
+        // Return the computed value
+        return dp[__x_][_y_];
+    }
+}
+
+
+
+
+/*
+
+Traffic Flow
+Problem Description
+A traffic flow grid is a conceptual representation used in transportation planning and traffic engineering to model and analyze the movement of vehicles through a network of intersections in the city called as junctions. A traffic flow grid is akin to a matrix, with rows and columns denoting various junctions, and matrix cell values symbolizing the traffic flow in that junction. In the era of screens and swipes, traffic's stage can be seen on mobile!
+
+Srihan finds himself caught in traffic on his way to the workplace. To speed up his journey, he opts to assess the traffic flow grid and chooses a quicker route. He currently resides at coordinates (i, j), and his office is located at coordinates (a, b) in the traffic grid. Given a rule that from a given junction, he can only go to right or down junction (junction is a cell, in terms of matrix). Could you assist him in finding a faster route to reach his workplace?
+
+Constraints
+Note that the provided positions in the input are indexed starting from 1, where left top is (1, 1).
+
+1 <= n, m <= 100
+
+0 <= traffic flow <= 10^3
+
+Input
+First line consists of two space separated integers n, m denoting the number of rows and columns in the traffic grid.
+
+Next n lines consists of m space separated integers denoting the traffic flow. The value at i, j indicates the traffic flow at junction i and j.
+
+Line n+2 consists of two space separated integers denoting the coordinates of Srihan's current position.
+
+Line n+3 consists of two separated integers denoting the coordinates of Srihan's workplace.
+
+Output
+Single integer denoting the the minimum traffic flow Srihan must navigate to reach his workplace. In case there is no path from his current location to workplace, print "-1".
+
+Time Limit (secs)
+1
+
+Examples
+Example 1
+
+Input
+
+4 4
+
+3 1 9 2
+
+12 3 10 1
+
+11 10 14 2
+
+5 4 3 7
+
+1 2
+
+4 4
+
+Output
+
+22
+
+Explanation
+
+Srihan will choose the path - (1,2) -> (1,3) -> (1,4) -> (2,4) -> (3,4) -> (4,4)
+
+The total traffic flow Srihan navigated is 1 + 9 + 2 + 1 + 2 + 7 = 22 which is the minimum possible.
+
+Example 2
+
+Input
+
+3 3
+
+6 9 1
+
+4 7 3
+
+5 0 2
+
+1 1
+
+3 3
+
+Output
+
+17
+
+Explanation
+
+Srihan will choose the path - (1,1) -> (2,1) -> (2,2) -> (3,2) -> (3,3)
+
+The total traffic flow Srihan navigated is 6 + 4 + 5 + 0 + 2 = 17 which is the minimum possible.*/
+
+
+
+
+
+
+
+
+
+
+
+
+
